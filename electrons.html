@@ -14,15 +14,15 @@
 </head>
 <body>
 <canvas id="canvas" width="800" height="400"></canvas>
-<button id="playButton">Play</button>
+<button id="refreshButton">Refresh Animation</button>
 <script>
     // Get the canvas element and its context
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
 
     // Define variables for circles
-    var circleRadius = 10;
-    var greyCircleRadius = 5;
+    var circleRadius = 7;
+    var greyCircleRadius = 7;
     var speed = 2; // Speed of the circles
     var startX = 0; // Starting x-coordinate for all circles
     var startY = canvas.height / 2; // Starting y-coordinate for all circles
@@ -32,7 +32,7 @@
     var stationaryCircles = [];
 
     // Generate random locations for stationary grey circles
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 200; i++) {
         var x = Math.random() * canvas.width;
         var y = Math.random() * canvas.height;
         stationaryCircles.push({ x: x, y: y });
@@ -42,7 +42,7 @@
     var circles = [];
 
     // Initialize red circles with the same starting position and direction
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 200; i++) {
         circles.push({ x: startX, y: startY, angle: startAngle, color: 'red', collisions: 0 });
     }
 
@@ -59,7 +59,7 @@
         ctx.fillStyle = 'grey';
         stationaryCircles.forEach(function(circle) {
             ctx.beginPath();
-            ctx.arc(circle.x, circle.y, circleRadius, 0, Math.PI * 2);
+            ctx.arc(circle.x, circle.y, greyCircleRadius, 0, Math.PI * 2);
             ctx.fill();
             ctx.closePath();
         });
@@ -77,6 +77,24 @@
             ctx.fill();
             ctx.closePath();
 
+            function gaussianAngle(mean, deviation) {
+            let u, v, s;
+            do {
+                u = 2 * Math.random() - 1;
+                v = 2 * Math.random() - 1;
+                s = (u * u) + (v * v);
+            } while (s >= 1 || s === 0);
+            let z = u * Math.sqrt(-2 * Math.log(s) / s);
+            return z * deviation + mean;
+            }
+
+            // Usage example
+            let meanAngle = 0; // Mean angle in radians (zero degrees)
+            let angleDeviation = Math.PI / 2; // Standard deviation in radians
+
+            // Generate angle following Gaussian distribution
+            let gAngle = gaussianAngle(meanAngle, angleDeviation);
+
             // Check for collisions with grey circles
             stationaryCircles.forEach(function(stationaryCircle) {
                 var dx = circle.x - stationaryCircle.x;
@@ -88,25 +106,28 @@
                     circle.collisions++;
 
                     // If the circle has reached 2 collisions, remove it
-                    if (circle.collisions >= 150) {
+                    if (circle.collisions >= 100) {
                         circles.splice(index, 1); // Remove the circle from the array
                         return; // Exit the collision loop early
                     }
                     
-                    // Change direction randomly
-                    circle.angle = Math.random() * Math.PI * 2;
+                    // Change direction randomly between angles 320 and 40 (80)
+                    circle.angle = gAngle;
                 }
             });
         });
     }
 
-    function startAnimation() {
-        animate();
-    }
+    var refreshButton = document.getElementById('refreshButton');
 
-    // Add event listener to play button
-    document.getElementById('playButton').addEventListener('click', startAnimation);
-    
+    // Add event listener to the refresh button
+    refreshButton.addEventListener('click', function() {
+    // Reload the page to refresh the animation
+    location.reload();
+    });
+
+    // Start animation loop
+    animate();
 </script>
 </body>
 </html>

@@ -14,14 +14,15 @@
 </head>
 <body>
 <canvas id="canvas" width="800" height="400"></canvas>
+<button id="refreshButton">Refresh Animation</button>
 <script>
     // Get the canvas element and its context
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
 
     // Define variables for circles
-    var circleRadius = 10;
-    var greyCircleRadius = 5;
+    var circleRadius = 7;
+    var greyCircleRadius = 4;
     var speed = 2; // Speed of the circles
     var startX = 0; // Starting x-coordinate for all circles
     var startY = canvas.height / 2; // Starting y-coordinate for all circles
@@ -31,7 +32,7 @@
     var stationaryCircles = [];
 
     // Generate random locations for stationary grey circles
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 200; i++) {
         var x = Math.random() * canvas.width;
         var y = Math.random() * canvas.height;
         stationaryCircles.push({ x: x, y: y });
@@ -98,6 +99,14 @@
             });
         });
     }
+
+    var refreshButton = document.getElementById('refreshButton');
+
+    // Add event listener to the refresh button
+    refreshButton.addEventListener('click', function() {
+    // Reload the page to refresh the animation
+    location.reload();
+    });
 
     // Start animation loop
     animate();

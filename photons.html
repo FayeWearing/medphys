@@ -21,8 +21,8 @@
     var ctx = canvas.getContext('2d');
 
     // Define variables for circles
-    var circleRadius = 2;
-    var greyCircleRadius = 5;
+    var circleRadius = 7;
+    var greyCircleRadius = 14;
     var speed = 2; // Speed of the circles
     var startX = 0; // Starting x-coordinate for all circles
     var startY = canvas.height / 2; // Starting y-coordinate for all circles
@@ -32,7 +32,7 @@
     var stationaryCircles = [];
 
     // Generate random locations for stationary grey circles
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 200; i++) {
         var x = Math.random() * canvas.width;
         var y = Math.random() * canvas.height;
         stationaryCircles.push({ x: x, y: y });
