@@ -14,6 +14,7 @@
 </head>
 <body>
 <canvas id="canvas" width="800" height="400"></canvas>
+<button id="refreshButton">Refresh Animation</button>
 <script>
     // Get the canvas element and its context
     var canvas = document.getElementById('canvas');
@@ -98,6 +99,14 @@
             });
         });
     }
+
+    var refreshButton = document.getElementById('refreshButton');
+
+    // Add event listener to the refresh button
+    refreshButton.addEventListener('click', function() {
+    // Reload the page to refresh the animation
+    location.reload();
+    });
 
     // Start animation loop
     animate();
