@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red Circles Moving in Same Direction from One Location</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: white;
+    }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="800" height="400"></canvas>
+<button id="refreshButton">Refresh Animation</button>
+<script>
+    // Get the canvas element and its context
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    // Define variables for circles
+    var circleRadius = 7;
+    var greyCircleRadius = 14;
+    var speed = 2; // Speed of the circles
+    var startX = 0; // Starting x-coordinate for all circles
+    var startY = canvas.height / 2; // Starting y-coordinate for all circles
+    var startAngle = 0; // Starting angle for all circles
+
+    // Define array to store stationary grey circle locations
+    var stationaryCircles = [];
+
+    // Generate random locations for stationary grey circles
+    for (var i = 0; i < 200; i++) {
+        var x = Math.random() * canvas.width;
+        var y = Math.random() * canvas.height;
+        stationaryCircles.push({ x: x, y: y });
+    }
+
+    // Define array to store circle objects (position, direction, color, collision count)
+    var circles = [];
+
+    // Initialize red circles with the same starting position and direction
+    for (var i = 0; i < 100; i++) {
+        circles.push({ x: startX, y: startY, angle: startAngle, color: 'red', collisions: 0 });
+    }
+
+    // Animation loop
+    function animate() {
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw background
+        ctx.fillStyle = 'rgb(109, 164, 237)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw stationary grey circles
+        ctx.fillStyle = 'grey';
+        stationaryCircles.forEach(function(circle) {
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, greyCircleRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+        });
+
+        // Update and draw circles
+        circles.forEach(function(circle, index) {
+            // Update circle position based on its direction
+            circle.x += Math.cos(circle.angle) * speed;
+            circle.y += Math.sin(circle.angle) * speed;
+
+            // Draw circle
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circleRadius, 0, Math.PI * 2);
+            ctx.fillStyle = circle.color;
+            ctx.fill();
+            ctx.closePath();
+
+            // Check for collisions with grey circles
+            stationaryCircles.forEach(function(stationaryCircle) {
+                var dx = circle.x - stationaryCircle.x;
+                var dy = circle.y - stationaryCircle.y;
+                var distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < circleRadius) {
+                    // Collision detected, increment collision count
+                    circle.collisions++;
+
+                    // If the circle has reached 2 collisions, remove it
+                    if (circle.collisions >= 200) {
+                        circles.splice(index, 1); // Remove the circle from the array
+                        return; // Exit the collision loop early
+                    }
+                    
+                    // Change direction randomly
+                    circle.angle = (Math.random() * (20 * Math.PI / 180)) + (350 * Math.PI / 180);
+                }
+            });
+        });
+    }
+
+    var refreshButton = document.getElementById('refreshButton');
+
+    // Add event listener to the refresh button
+    refreshButton.addEventListener('click', function() {
+    // Reload the page to refresh the animation
+    location.reload();
+    });
+
+    // Start animation loop
+    animate();
+</script>
+</body>
+</html>
