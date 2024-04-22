@@ -22,7 +22,7 @@
 
     // Define variables for circles
     var circleRadius = 7;
-    var greyCircleRadius = 4;
+    var greyCircleRadius = 3;
     var speed = 2; // Speed of the circles
     var startX = 0; // Starting x-coordinate for all circles
     var startY = canvas.height / 2; // Starting y-coordinate for all circles
@@ -32,7 +32,7 @@
     var stationaryCircles = [];
 
     // Generate random locations for stationary grey circles
-    for (var i = 0; i < 200; i++) {
+    for (var i = 0; i < 400; i++) {
         var x = Math.random() * canvas.width;
         var y = Math.random() * canvas.height;
         stationaryCircles.push({ x: x, y: y });
@@ -77,6 +77,12 @@
             ctx.fill();
             ctx.closePath();
 
+            // Check if the circle is beyond 2/3 of the canvas width, then remove it
+            if (circle.x > canvas.width * 3 / 4) {
+                circles.splice(index, 1); // Remove the circle from the array
+                return; // Exit the loop early
+            }
+
             // Check for collisions with grey circles
             stationaryCircles.forEach(function(stationaryCircle) {
                 var dx = circle.x - stationaryCircle.x;
@@ -94,7 +100,7 @@
                     }
                     
                     // Change direction randomly
-                    circle.angle = (Math.random() * (20 * Math.PI / 180)) + (350 * Math.PI / 180);
+                    circle.angle = (Math.random() * (1 * Math.PI / 180)) + (359 * Math.PI / 180);
                 }
             });
         });
